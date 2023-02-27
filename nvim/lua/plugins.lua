@@ -41,5 +41,6 @@ packer.startup(function(use)
   use 'williamboman/mason-lspconfig.nvim'
   use 'goolord/alpha-nvim' -- Dashboard
   use "akinsho/toggleterm.nvim" --toggleterm
+  use 'cuducos/yaml.nvim' --yaml
 end
 )
