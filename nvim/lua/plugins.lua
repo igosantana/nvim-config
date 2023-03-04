@@ -30,7 +30,8 @@ packer.startup(function(use)
   use 'nvim-telescope/telescope.nvim'
   use 'nvim-telescope/telescope-file-browser.nvim'
   use 'norcalli/nvim-colorizer.lua'
-  use "glepnir/lspsaga.nvim"
+  use 'glepnir/lspsaga.nvim'
+  use 'lukas-reineke/lsp-format.nvim'
   use 'numToStr/Comment.nvim'
   use 'jose-elias-alvarez/null-ls.nvim'
   use 'MunifTanjim/prettier.nvim'
@@ -40,7 +41,8 @@ packer.startup(function(use)
   use 'williamboman/mason.nvim'
   use 'williamboman/mason-lspconfig.nvim'
   use 'goolord/alpha-nvim' -- Dashboard
-  use "akinsho/toggleterm.nvim" --toggleterm
+  use 'akinsho/toggleterm.nvim' --toggleterm
   use 'cuducos/yaml.nvim' --yaml
+  use 'nvim-tree/nvim-tree.lua' -- nvim tree left side
 end
 )

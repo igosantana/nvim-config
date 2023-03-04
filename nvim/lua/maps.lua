@@ -74,3 +74,7 @@ keymap.set('n', '<leader>q', ':nohlsearch<Bar>:echo<CR>', default_opts)
 -- Move selected line / block of text in visual mode
 keymap.set("x", "<S-k>", ":move '<-2<CR>gv-gv", default_opts)
 keymap.set("x", "<S-j>", ":move '>+1<CR>gv-gv", default_opts)
+
+-- Nvim-tree mappings
+keymap.set("n", "<leader>o", ":NvimTreeToggle <CR>", default_opts)
+keymap.set("n", "<leader>f", ":NvimTreeFindFileToggle <CR>", default_opts)

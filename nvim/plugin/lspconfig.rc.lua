@@ -3,17 +3,17 @@ if (not status) then return end
 
 local protocol = require('vim.lsp.protocol')
 
-local augroup_format = vim.api.nvim_create_augroup("Format", { clear = true })
-local enable_format_on_save = function(_, bufnr)
-  vim.api.nvim_clear_autocmds({ group = augroup_format, buffer = bufnr })
-  vim.api.nvim_create_autocmd("BufWritePre", {
-    group = augroup_format,
-    buffer = bufnr,
-    callback = function()
-      vim.lsp.buf.format({ bufnr = bufnr })
-    end,
-  })
-end
+-- local augroup_format = vim.api.nvim_create_augroup("Format", { clear = true })
+-- local enable_format_on_save = function(_, bufnr)
+--   vim.api.nvim_clear_autocmds({ group = augroup_format, buffer = bufnr })
+--   vim.api.nvim_create_autocmd("BufWritePre", {
+--     group = augroup_format,
+--     buffer = bufnr,
+--     callback = function()
+--       vim.lsp.buf.format({ bufnr = bufnr })
+--     end,
+--   })
+-- end
 -- -- Mappings
 -- local opts = { noremap = true, silent = true }vim.keymap.set('n', 'K', '<Cmd>Lspsaga hover_doc<CR>', opts)
 -- vim.keymap.set('n', '<leader>k', vim.diagnostic.goto_prev, opts)
@@ -21,29 +21,32 @@ end
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-
-  --Enable completion triggered by <c-x><c-o>
-  --local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-  -- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  local bufopts = { noremap = true, silent = true }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', bufopts)
-  vim.keymap.set('n', 'gr', '<Cmd>vim.lsp.buf.references()<CR>', bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  --vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-  -- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  -- vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  -- vim.keymap.set('n', '<space>wl', function()
-  --   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  -- end, bufopts)
-  -- vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  -- vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+-- local on_attach = function(_, bufnr)
+--   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+local on_attach = function(client)
+  require("lsp-format").on_attach(client)
 end
+
+--Enable completion triggered by <c-x><c-o>
+--local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+-- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+-- Mappings.
+-- See `:help vim.lsp.*` for documentation on any of the below functions
+local bufopts = { noremap = true, silent = true }
+vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+-- vim.keymap.set('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', bufopts)
+-- vim.keymap.set('n', 'gr', '<Cmd>vim.lsp.buf.references()<CR>', bufopts)
+vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+--vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+-- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+-- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+-- vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+-- vim.keymap.set('n', '<space>wl', function()
+--   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+-- end, bufopts)
+-- vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+-- vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+
 
 protocol.CompletionItemKind = {
   '', -- Text
@@ -84,6 +87,10 @@ nvim_lsp.flow.setup {
 
 nvim_lsp.tsserver.setup {
   on_attach = on_attach,
+  -- on_attach = function(client, bufnr)
+  --   on_attach(client, bufnr)
+  --   enable_format_on_save(client, bufnr)
+  -- end,
   filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
   cmd = { "typescript-language-server", "--stdio" },
   capabilities = capabilities
@@ -91,15 +98,12 @@ nvim_lsp.tsserver.setup {
 
 nvim_lsp.sourcekit.setup {
   on_attach = on_attach,
-  capabilities = capabilities,
+  capabilities = capabilities
 }
 
-nvim_lsp.sumneko_lua.setup {
+nvim_lsp.lua_ls.setup {
   capabilities = capabilities,
-  on_attach = function(client, bufnr)
-    on_attach(client, bufnr)
-    enable_format_on_save(client, bufnr)
-  end,
+  on_attach = on_attach,
   settings = {
     Lua = {
       diagnostics = {
@@ -117,13 +121,13 @@ nvim_lsp.sumneko_lua.setup {
 }
 
 nvim_lsp.tailwindcss.setup {
-  on_attach = on_attach,
-  capabilities = capabilities
+  capabilities = capabilities,
+  on_attach = on_attach
 }
 
 nvim_lsp.cssls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities
+  capabilities = capabilities,
+  on_attach = on_attach
 }
 
 nvim_lsp.astro.setup {
@@ -133,10 +137,7 @@ nvim_lsp.astro.setup {
 
 nvim_lsp.gopls.setup {
   capabilities = capabilities,
-  on_attach = function(client, bufnr)
-    on_attach(client, bufnr)
-    enable_format_on_save(client, bufnr)
-  end,
+  on_attach = on_attach
 }
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
