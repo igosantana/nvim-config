@@ -44,5 +44,6 @@ packer.startup(function(use)
   use 'akinsho/toggleterm.nvim' --toggleterm
   use 'cuducos/yaml.nvim' --yaml
   use 'nvim-tree/nvim-tree.lua' -- nvim tree left side
+  use 'dart-lang/dart-vim-plugin' -- dart-plugin
 end
 )

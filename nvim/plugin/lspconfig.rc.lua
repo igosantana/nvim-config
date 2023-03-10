@@ -3,6 +3,9 @@ if (not status) then return end
 
 local protocol = require('vim.lsp.protocol')
 
+-- local pid = vim.fn.getpid()
+-- local omnisharp_bin = "/var/home/igosantana/.local/omnisharp"
+
 -- local augroup_format = vim.api.nvim_create_augroup("Format", { clear = true })
 -- local enable_format_on_save = function(_, bufnr)
 --   vim.api.nvim_clear_autocmds({ group = augroup_format, buffer = bufnr })
@@ -91,7 +94,7 @@ nvim_lsp.tsserver.setup {
   --   on_attach(client, bufnr)
   --   enable_format_on_save(client, bufnr)
   -- end,
-  filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
+  filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
   cmd = { "typescript-language-server", "--stdio" },
   capabilities = capabilities
 }
@@ -127,6 +130,13 @@ nvim_lsp.tailwindcss.setup {
 
 nvim_lsp.cssls.setup {
   capabilities = capabilities,
+  on_attach = on_attach,
+  cmd = { "vscode-css-language-server", "--stdio" },
+  filetypes = { "css", "scss", "sass", "css.css", "css.scss", "css.sass" }
+}
+
+nvim_lsp.html.setup {
+  capabilities = capabilities,
   on_attach = on_attach
 }
 
@@ -139,6 +149,23 @@ nvim_lsp.gopls.setup {
   capabilities = capabilities,
   on_attach = on_attach
 }
+
+
+-- nvim_lsp.dart.setup {
+--   capabilities = capabilities,
+--   on_attach = on_attach
+-- }
+
+nvim_lsp.csharp_ls.setup {
+  capabilities = capabilities,
+  on_attach = on_attach
+}
+
+-- nvim_lsp.omnisharp.setup {
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   cmd = { omnisharp_bin, "--languageserver", "--hostPID", tostring(pid) },
+-- }
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
